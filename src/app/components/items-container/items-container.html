@@ -1,0 +1,94 @@
+<section>
+  <div>
+    <div class="mt-3 font-bold">
+      <h2>All Items: </h2>
+    </div>
+    <form class="mt-3" (submit)="onSubmit($event)">
+      <div class="lg:flex space-x-3">
+        <!-- Search Input -->
+        <div class="mt-3 flex border border-slate-900 rounded-md p-2 space-x-2">
+          <label for="search">
+            <lucide-icon [name]="Search"></lucide-icon>
+          </label>
+          <input
+            type="text"
+            placeholder="Search"
+            id="search"
+            (input)="onSearchChange($event)"
+            class=""
+          />
+        </div>
+
+        <!-- Item Type Filter -->
+        <div class="mt-3 border-l border-slate-900 px-3">
+          <label class="px-3" for="itemType">Item Type</label>
+          <select
+            name="itemType"
+            id="itemType"
+            (change)="onTypeChange($event)"
+            class="border border-slate-900 rounded-md p-2"
+          >
+            <option value="">All</option>
+            <option [value]="ItemType.WEAPON">{{ ItemType.WEAPON }}</option>
+            <option [value]="ItemType.ARMOR">{{ ItemType.ARMOR }}</option>
+            <option [value]="ItemType.CONSUMABLE">{{ ItemType.CONSUMABLE }}</option>
+          </select>
+        </div>
+
+        <!-- Item Rarity Filter -->
+        <div class="mt-3 border-l border-slate-900 px-3">
+          <label class="px-3" for="itemRarity">Item Rarity</label>
+          <select
+            name="itemRarity"
+            id="itemRarity"
+            (change)="onRarityChange($event)"
+            class="border border-slate-900 rounded-md p-2"
+          >
+            <option value="">All</option>
+            <option [value]="Rarity.COMMON">{{ Rarity.COMMON }}</option>
+            <option [value]="Rarity.RARE">{{ Rarity.RARE }}</option>
+            <option [value]="Rarity.EPIC">{{ Rarity.EPIC }}</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Items Grid -->
+  <div *ngIf="filteredItems().length > 0"
+    class="grid grid-cols-2 md:w-1/2 md:grid-cols-3 border border-slate-900 p-2 rounded-xl mt-3"
+  >
+    <div
+      *ngFor="let item of filteredItems()"
+      class="h-[100px] flex flex-col items-center" (click)="handleEquip(item)"
+    >
+      <span class="font-bold">{{ item.name }}</span>
+      <img
+        [src]="item.icon"
+        [alt]="item.description"
+        class="h-full object-contain"
+      />
+      <span class="font-bold">${{ item.buyPrice }}</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="mt-3">
+    <h2 class="font-bold">Equipped Items: </h2>
+  </div>
+  <div class="flex">
+    <div *ngFor="let item of equippedItems()" (click)="unEquipItem(item)" class="mt-3">
+      <div>
+        <img [src]="item.icon" [alt]="item.description" class="h-[50px] object-contain">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Optional empty state -->
+<section *ngIf="filteredItems().length === 0">
+  <div class="flex justify-center mt-5">
+    <lucide-icon class="animate-spin" [name]="LoaderCircleIcon"></lucide-icon>
+  </div>
+</section>

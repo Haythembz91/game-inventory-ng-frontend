@@ -1,0 +1,37 @@
+
+<header class="p-2 bg-slate-900 text-white font-bold">
+  <div class="flex justify-between">
+    <div>
+        <a routerLink="/">
+          <img src="https://res.cloudinary.com/dmgfsayir/image/upload/v1766453039/ChatGPT_Image_Dec_23_2025_02_19_57_AM_ozruie.png" alt="logo" class="h-[50px]">
+        </a>
+    </div>
+    <nav class="hidden md:flex items-center ">
+      <ul class="md:flex space-x-5">
+        <li>
+          <a routerLink="/">Dashboard</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="hidden md:flex items-center">
+      Hello Gamer
+    </div>
+    <div class="md:hidden flex items-center">
+      <button (click)="toggleMenu()">
+        <lucide-icon [name]="isOpen()? X : Menu"></lucide-icon>
+      </button>
+    </div>
+  </div>
+  <div [class.hidden]="!isOpen()" class="flex flex-col items-center md:hidden">
+    <nav>
+      <ul>
+        <li>
+          <a routerLink="/">Dashboard</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="mt-3">
+      Hello Gamer
+    </div>
+  </div>
+</header>

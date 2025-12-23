@@ -1,0 +1,118 @@
+import { Component, computed, signal, inject, OnInit } from '@angular/core';
+import { NgForOf, NgIf } from '@angular/common';
+import { LucideAngularModule, Search, LoaderCircleIcon } from 'lucide-angular';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ItemType, Rarity } from '../../libs/enums';
+import { EquippedItems, Item } from '../../libs/interfaces';
+import { ItemService } from '../../services/item-service';
+import { EquipItemService } from '../../services/equip-item-service';
+import { EquippedItemsService } from '../../services/equipped-items-service';
+
+@Component({
+  selector: 'app-items-container',
+  standalone: true,
+  imports: [NgForOf, NgIf, LucideAngularModule],
+  templateUrl: './items-container.html',
+  styleUrl: './items-container.css',
+})
+export class ItemsContainer implements OnInit {
+
+  // 🔧 services
+  private itemsService = inject(ItemService);
+  private equipItemService = inject(EquipItemService);
+  private equippedItemsService = inject(EquippedItemsService);
+
+  // 🔎 icons & enums
+  readonly Search = Search;
+  protected readonly ItemType = ItemType;
+  protected readonly Rarity = Rarity;
+
+  // 🔥 Items (loaded once)
+  items = toSignal(
+    this.itemsService.getItems(),
+    { initialValue: [] as Item[] }
+  );
+
+  // 🔥 Equipped Items Signal (reactive UI)
+  equippedItems = signal<EquippedItems[]>([]);
+
+  // 🔥 FILTER STATE
+  search = signal('');
+  selectedType = signal('');
+  selectedRarity = signal('');
+
+  // 🔥 DERIVED FILTERED LIST
+  filteredItems = computed(() =>
+    this.items().filter(item => {
+      const searchMatch =
+        item.name.toLowerCase().includes(this.search().toLowerCase());
+
+      const typeMatch =
+        !this.selectedType() || item.type === this.selectedType();
+
+      const rarityMatch =
+        !this.selectedRarity() || item.rarity === this.selectedRarity();
+
+      return searchMatch && typeMatch && rarityMatch;
+    })
+  );
+
+  // ✅ LOAD EQUIPPED ITEMS ON INIT
+  ngOnInit() {
+    this.loadEquippedItems();
+  }
+
+  private loadEquippedItems() {
+    this.equippedItemsService.getEquippedItems()
+      .subscribe(items => this.equippedItems.set(items));
+  }
+
+  // 🔄 Equip + Refresh State
+  handleEquip(item:Item) {
+    this.equipItemService.equipItem(item).subscribe(res => {
+      if (res.equippedItems) {
+        console.log('Equipped:', res.equippedItems);
+
+        // refresh UI data
+        this.loadEquippedItems();
+
+      } else {
+        console.log(res.message);
+      }
+    });
+  }
+
+  // Unequip
+
+  unEquipItem(item:Item) {
+    this.equipItemService.unEquipItem(item).subscribe(res => {
+      if (res.equippedItems) {
+        console.log('Unequipped:', res.message);
+        // refresh UI data
+        this.loadEquippedItems();
+      } else {
+        console.log(res.message);
+      }
+    });
+  }
+
+
+  // 🔄 UI HANDLERS
+  onSearchChange(event: Event) {
+    this.search.set((event.target as HTMLInputElement).value);
+  }
+
+  onTypeChange(event: Event) {
+    this.selectedType.set((event.target as HTMLSelectElement).value);
+  }
+
+  onRarityChange(event: Event) {
+    this.selectedRarity.set((event.target as HTMLSelectElement).value);
+  }
+
+  onSubmit(event: Event) {
+    event.preventDefault();
+  }
+
+  protected readonly LoaderCircleIcon = LoaderCircleIcon;
+}
