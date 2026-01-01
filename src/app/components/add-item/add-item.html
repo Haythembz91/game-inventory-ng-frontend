@@ -1,0 +1,68 @@
+
+
+<div class="md:w-2/3 lg:w-1/3 mx-auto">
+  <form [formGroup]="addItemForm" class="addItemForm" (ngSubmit)="handleAddItem($event)">
+    <div class="mt-3">
+      <label class="" for="name">Name:</label>
+      <input class="" type="text" id="name" name="name" formControlName="name">
+    </div>
+    <div class="mt-3">
+      <label for="description">Description:</label>
+      <input type="text" id="description" name="description" formControlName="description">
+    </div>
+    <div class="mt-3">
+      <label for="type">Type:</label>
+      <select name="type" id="type" formControlName="type">
+        <option disabled value="">Select type</option>
+        <option *ngFor="let type of typeList" [value]="type">{{ type }}</option>
+      </select>
+    </div>
+    <div class="mt-3">
+      <label for="rarity">Rarity:</label>
+      <select name="rarity" id="rarity" formControlName="rarity">
+        <option disabled value="">Select rarity</option>
+        <option *ngFor="let rarity of rarityList" [value]="rarity">{{ rarity }}</option>
+      </select>
+    </div>
+    <div class="mt-3">
+      <label for="damage">Damage:</label>
+      <input type="number" id="damage" name="damage" formControlName="damage">
+    </div>
+    <div class="mt-3">
+      <label for="defense">Defense:</label>
+      <input type="number" id="defense" name="defense" formControlName="defense">
+    </div>
+    <div class="mt-3">
+      <label for="attackSpeed">Attack Speed:</label>
+      <input type="number" id="attackSpeed" name="attackSpeed" formControlName="attackSpeed">
+    </div>
+    <div class="mt-3">
+      <label for="healAmount">Heal Amount:</label>
+      <input type="number" id="healAmount" name="healAmount" formControlName="healAmount">
+    </div>
+    <div class="mt-3">
+      <label for="buyPrice">Buy Price:</label>
+      <input type="number" id="buyPrice" name="buyPrice" formControlName="buyPrice">
+    </div>
+    <div class="mt-3">
+      <label for="sellPrice">Sell Price:</label>
+      <input type="number" id="sellPrice" name="sellPrice" formControlName="sellPrice">
+    </div>
+    <div class="mt-3">
+      <label for="icon">Icon:</label>
+      <input type="file" accept="image/*" id="icon" name="icon">
+    </div>
+    <div class="mt-3">
+      <button *ngIf="!isLoading()" class="w-full px-4 py-2 bg-blue-500 text-white font-semibold
+         rounded-lg transition
+         hover:bg-blue-600
+         focus:outline-none focus:ring-2 focus:ring-blue-300
+         focus:shadow-lg active:scale-95 cursor-pointer"  type="submit">Add Item</button>
+      <button disabled *ngIf="isLoading()" class="w-full px-4 py-2 bg-blue-500 text-white font-semibold
+         rounded-lg transition
+         hover:bg-blue-600
+         focus:outline-none focus:ring-2 focus:ring-blue-300
+         focus:shadow-lg active:scale-95 cursor-pointer"  type="button">Adding...</button>
+    </div>
+  </form>
+</div>
