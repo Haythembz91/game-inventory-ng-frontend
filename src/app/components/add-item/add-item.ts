@@ -3,6 +3,7 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {AddItemService} from '../../services/add-item';
 import {rarityList, typeList} from '../../libs/const';
 import {NgForOf, NgIf} from '@angular/common';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-add-item',
@@ -16,6 +17,7 @@ import {NgForOf, NgIf} from '@angular/common';
 export class AddItem {
 
   private addItemService = inject(AddItemService)
+  private router = inject(Router)
 
   addItemForm = new FormGroup({
     name : new FormControl('', [Validators.required, ]),
@@ -41,6 +43,7 @@ export class AddItem {
     this.addItemService.addItem(formData).subscribe(res => {
       console.log(res);
       this.isLoading.set(false);
+      this.router.navigate(['/']).then();
     })
   }
 
